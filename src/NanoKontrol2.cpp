@@ -65,8 +65,14 @@ NanoKontrol2::setup()
 
   // Default Draw Size
   float controllerWidth = 500;
-  float controllerAspect = ((float)templateImage.getHeight() /
-                            (float)templateImage.getWidth());
+  float controllerAspect;
+  if (templateImage.isAllocated())
+    controllerAspect = ((float)templateImage.getHeight() /
+                        (float)templateImage.getWidth());
+  else
+    controllerAspect = ((float)300 /
+                        (float)1190); // stock image size
+
   drawRect.set(0, 0, controllerWidth, controllerWidth*controllerAspect);
 
   ofVec2f mixerChannelOffset(356, 23);
@@ -150,8 +156,9 @@ NanoKontrol2::draw()
   ofPushMatrix();
   {
     ofTranslate(drawRect.x, drawRect.y);
-    ofScale(drawRect.width/templateImage.getWidth(),
-            drawRect.height/templateImage.getHeight());
+    if (drawRect.width > 0 && drawRect.height > 0)
+      ofScale(drawRect.width/templateImage.getWidth(),
+              drawRect.height/templateImage.getHeight());
 
     // Draw special buttons
     {
