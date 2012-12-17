@@ -49,6 +49,10 @@ public:
   };
   bool button[NumButtons];
   ofRectangle buttonRect[NumButtons];
+
+  ofEvent<bool> sliderChangedEvent;
+  ofEvent<bool> knobChangedEvent;
+  ofEvent<bool> buttonChangedEvent;
 };
 
 class NanoKontrol2
@@ -68,11 +72,11 @@ public:
   void show(bool shouldShow=true);
   void hide();
   
+  bool hidden;
   ofEvent<const MidiMessage> midiReceiveEvent;
 
   const static size_t MixerChannels = 8;
   MixerChannel channel[MixerChannels];
-  ofEvent<bool> mixerChangedEvent[MixerChannels];
 
   ofEvent<bool> trackNextEvent;
   ofEvent<bool> trackPrevEvent;

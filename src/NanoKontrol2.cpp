@@ -35,6 +35,7 @@ ofImage NanoKontrol2::templateImage;
 
 //--------------------------------------------------------------
 NanoKontrol2::NanoKontrol2()
+: hidden(false)
 {
   for (size_t i=0; i<MixerChannels; ++i)
   {
@@ -98,25 +99,32 @@ NanoKontrol2::setup()
     cursor += nextChannelOffset;
   }
 
-  RtMidiIn* midiin = new RtMidiIn();
-  size_t numPorts = midiin->getPortCount();
-  size_t nanoKontrolPort = INT_MAX;
-  const std::string nanoKONTROL2("nanoKONTROL2");
-  if (midiin->getPortCount() >= 1)
-  {
-    for (size_t i=0; i<numPorts; ++i)
+  try {
+    RtMidiIn* midiin = new RtMidiIn();
+    size_t numPorts = midiin->getPortCount();
+    size_t nanoKontrolPort = INT_MAX;
+    const std::string nanoKONTROL2("nanoKONTROL2");
+    if (midiin->getPortCount() >= 1)
     {
-      if (midiin->getPortName(i).substr(0, nanoKONTROL2.size()) == nanoKONTROL2)
+      for (size_t i=0; i<numPorts; ++i)
       {
-        nanoKontrolPort = i;
-        midiin->openPort(nanoKontrolPort);
-        midiin->setCallback(&_midicallback, this);
+        if (midiin->getPortName(i).substr(0, nanoKONTROL2.size()) == nanoKONTROL2)
+        {
+          nanoKontrolPort = i;
+          midiin->openPort(nanoKontrolPort);
+          midiin->setCallback(&_midicallback, this);
 
-        // Don't ignore sysex, timing, or active sensing messages.
-        midiin->ignoreTypes(false, false, false);
-        ofAddListener(midiReceiveEvent, this, &NanoKontrol2::midiReceive);
+          // Don't ignore sysex, timing, or active sensing messages.
+          midiin->ignoreTypes(false, false, false);
+          ofAddListener(midiReceiveEvent, this, &NanoKontrol2::midiReceive);
+        }
       }
     }
+  }
+  catch (RtError &error)
+  {
+    std::cout << "MIDI input exception:" << std::endl;
+    error.printMessage();
   }
   
   show();
@@ -132,6 +140,9 @@ NanoKontrol2::update()
 void
 NanoKontrol2::draw()
 {
+  if (hidden)
+    return;
+
   ofSetColor(255, 255, 255, 255);
 
   templateImage.draw(drawRect);
@@ -315,6 +326,7 @@ NanoKontrol2::show(bool shouldShow)
     ofRemoveListener(ofEvents().mouseDragged,   this, &NanoKontrol2::_mouseDragged);
     ofRemoveListener(ofEvents().mouseReleased,  this, &NanoKontrol2::_mouseReleased);
   }
+  hidden = !shouldShow;
 }
 
 //--------------------------------------------------------------
