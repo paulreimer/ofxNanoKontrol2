@@ -13,15 +13,15 @@
 
 //--------------------------------------------------------------
 MidiMessage::MidiMessage()
-: deltatime(0)
-, channel(0)
+: channel(0)
+, deltatime(0)
 {}
 
 //--------------------------------------------------------------
 MidiMessage::MidiMessage(const std::vector<unsigned char>& _buffer,
                          double _deltatime,
                          size_t _channel)
-: buffer(_buffer)
+: channel(_channel)
 , deltatime(_deltatime)
-, channel(_channel)
+, buffer(_buffer)
 {}

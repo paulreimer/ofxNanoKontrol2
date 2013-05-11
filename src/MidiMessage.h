@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include <sys/types.h>
 
 class MidiMessage
 {
