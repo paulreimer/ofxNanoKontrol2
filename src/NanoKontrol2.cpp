@@ -148,6 +148,7 @@ NanoKontrol2::draw()
   templateImage.draw(drawRect);
   ofPushMatrix();
   {
+    ofTranslate(drawRect.x, drawRect.y);
     ofScale(drawRect.width/templateImage.getWidth(),
             drawRect.height/templateImage.getHeight());
 
