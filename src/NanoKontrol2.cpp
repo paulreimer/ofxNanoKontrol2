@@ -36,6 +36,7 @@ ofImage NanoKontrol2::templateImage;
 //--------------------------------------------------------------
 NanoKontrol2::NanoKontrol2()
 : hidden(false)
+, midiin(NULL)
 {
   for (size_t i=0; i<MixerChannels; ++i)
   {
